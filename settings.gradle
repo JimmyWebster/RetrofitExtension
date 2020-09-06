@@ -1,0 +1,3 @@
+include ':rext'
+include ':app'
+rootProject.name = "RExt"
