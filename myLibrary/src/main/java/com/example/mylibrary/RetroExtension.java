@@ -5,7 +5,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 
 public class RetroExtension {
 
-//    This method returns httpClient that has httpLoggingInterceptor
     public OkHttpClient.Builder getLoggingClient() {
 
         HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
@@ -15,7 +14,6 @@ public class RetroExtension {
 
         return httpClient;
     }
-
 
 
 }
