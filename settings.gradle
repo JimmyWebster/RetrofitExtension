@@ -1,3 +1,4 @@
+include ':lib'
 include ':mylibrary'
 include ':app'
 rootProject.name = "RetrofitExtension"
