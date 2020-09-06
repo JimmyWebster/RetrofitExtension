@@ -1,5 +1,0 @@
-include ':lib'
-include ':app'
-include ':Library'
-
-rootProject.name = "RetroExt"
