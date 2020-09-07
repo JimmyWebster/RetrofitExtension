@@ -25,7 +25,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
@@ -83,16 +85,15 @@ public class RExt {
     }
 
 
-    public static List<Object> getDataFromDatabaseOP(String BASE_TAG, final Context context, final List<Object> objectList, DataSnapshot dataSnapshot) {
-        objectList.clear();
+
+    public <T> List<T> getDataFromDatabaseOP(Class<T> klazz, DataSnapshot dataSnapshot) {
+        List<T> list = new ArrayList<>();
         for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()
         ) {
-            Object item = itemSnapshot.getValue(Object.class);
-            objectList.add(item);
+            T item = itemSnapshot.getValue(klazz);
+            list.add(item);
         }
-
-
-        return objectList;
+        return list;
     }
 
     public static void updateDataDatabase(String BASE_TAG, String id, Object object) {
