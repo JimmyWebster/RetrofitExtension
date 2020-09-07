@@ -62,10 +62,10 @@ public class RExt {
 
 
     //  Add to Realtime Database
-    public static void addToDatabase(String BASE_TAG, Object object) {
+    public static void addToDatabase(String BASE_TAG, Object object,String ID) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(BASE_TAG);
 
-        databaseReference.child(getUniqueIdDatabase(BASE_TAG)).setValue(object);
+        databaseReference.child(ID).setValue(object);
     }
 
 
