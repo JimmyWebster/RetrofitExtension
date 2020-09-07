@@ -60,9 +60,14 @@ public class RExt {
 //        mAdView.loadAd(adRequest);
     }
 
+    public static DatabaseReference getReference(String BASE_TAG) {
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(BASE_TAG);
+        return databaseReference;
+    }
+
 
     //  Add to Realtime Database
-    public static void addToDatabase(String BASE_TAG, Object object,String ID) {
+    public static void addToDatabase(String BASE_TAG, Object object, String ID) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference(BASE_TAG);
 
         databaseReference.child(ID).setValue(object);
@@ -80,7 +85,7 @@ public class RExt {
 
     public static List<Object> getDataFromDatabaseOP(String BASE_TAG, final Context context, final List<Object> objectList, DataSnapshot dataSnapshot) {
         objectList.clear();
-        for (DataSnapshot itemSnapshot: dataSnapshot.getChildren()
+        for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()
         ) {
             Object item = itemSnapshot.getValue(Object.class);
             objectList.add(item);
@@ -112,8 +117,7 @@ public class RExt {
     }
 
 
-
-    private void phoneAuthVerifyOTP(){
+    private void phoneAuthVerifyOTP() {
 
     }
 
