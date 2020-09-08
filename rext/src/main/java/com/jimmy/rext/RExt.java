@@ -1,35 +1,38 @@
+
+//      Copyright 2020 Jimmy Webster
+//
+//      Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the
+//      Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software,
+//      and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+//
+//      The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+//
+//      THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+//      MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
+//      ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH
+//      THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+
 package com.jimmy.rext;
 
 import android.app.Activity;
 import android.app.DownloadManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
+import android.media.MediaPlayer;
 import android.net.Uri;
-import android.os.Bundle;
 import android.os.Environment;
-import android.view.View;
+import android.os.Handler;
+import android.view.WindowManager;
 import android.widget.Toast;
+import android.widget.VideoView;
 
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.PhoneAuthCredential;
-import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -37,10 +40,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Objects;
-import java.util.concurrent.TimeUnit;
 
-import butterknife.ButterKnife;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 
@@ -98,7 +98,7 @@ public class RExt {
     }
 
 
-    public <T> List<T> getDataFromDatabaseOP(Class<T> klazz, DataSnapshot dataSnapshot) {
+    public <T> List<T> getDataFromDatabase(Class<T> klazz, DataSnapshot dataSnapshot) {
         List<T> list = new ArrayList<>();
         for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()
         ) {
@@ -214,6 +214,103 @@ public class RExt {
 
         videoListNew.removeAll(delete);
 
+
+    }
+
+    public static void setScreenFlags(Activity activity) {
+        activity.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+    }
+
+
+    public static Integer moveVideo(int millis, VideoView videoView) {
+        float duration = (float) videoView.getDuration();
+        float ration = millis / duration;
+        int percent = (int) (ration * 100);
+        videoView.seekTo(millis);
+        return videoView.getCurrentPosition() / 1000;
+//        videoView.start();
+
+    }
+
+
+    private void initVideoOP(final VideoView mVideoView, String m_video_url, boolean isDownloaded, Uri downloadedUri, final int mSecondsMove) {
+        Uri uri;
+        if (!isDownloaded) {
+            uri = Uri.parse(m_video_url);
+            mVideoView.setVideoURI(uri);
+        } else {
+            Uri fileUri = downloadedUri;
+            mVideoView.setVideoURI(fileUri);
+
+        }
+
+        mVideoView.requestFocus();
+
+        mVideoView.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+            @Override
+            public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                System.out.println();
+                return false;
+            }
+        });
+        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+                mVideoView.start();
+
+//                loadData(video.getName()); Loads and moves
+                moveVideo(mSecondsMove, mVideoView);
+//
+                final Handler handler = new Handler();
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+//                        if (mVideoView.getDuration() != -1 && !isPaused) {
+//                            secondsCur++;
+//                            seekBar.setProgress((int) ((((float) (secondsCur * 1000) / mVideoView.getDuration()) * 100)));
+//
+//                        }
+//                        if (secondsCur * 1000 < mVideoView.getDuration()) {
+//                            handler.postDelayed(this, 1000);
+//                        }
+                    }
+                });
+
+            }
+        });
+
+
+    }
+
+
+    public static <T> void saveOnLeaveOP(Context context, VideoView videoView, T editedVideo, List<T> videoList, String TAG) {
+        if (videoView.getCurrentPosition() != 0) {
+//            Video editedVideo = new Video(videoList.size(), video.getName(), videoView.getCurrentPosition(), videoView.getDuration(), video.getUrl(), false,null);
+
+            for (int i = 0; i < videoList.size(); i++) {
+//                if (videoList.get(i).getUrl().equals(editedVideo.getUrl())) {
+
+                videoList.set(i, editedVideo);
+
+            }
+
+            saveDataToPreferences(context, videoList, TAG);
+        }
+    }
+
+    public static List<String> openActivityFromUrl(Activity activity) {
+
+        //   GET URI. If  link
+        Uri uri = activity.getIntent().getData();
+        if (uri != null) {
+            List<String> params = uri.getPathSegments();
+//            Get last parameter = id
+//            String id = params.get(params.size() - 1);
+            return params;
+        }
+
+        return null;
 
     }
 
