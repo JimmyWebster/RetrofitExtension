@@ -172,19 +172,19 @@ public class RExt {
 
     }
 
-    public static <T> void saveDataToPreferences(Context context, List<T> list) {
+    public static <T> void saveDataToPreferences(Context context, List<T> list, String prefTag) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared preferences", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
         Gson gson = new Gson();
         String json = gson.toJson(list);
-        editor.putString("videos", json);
+        editor.putString(prefTag, json);
         editor.apply();
     }
 
-    public static <T> void loadDataToPreferences(Context context, List<T> list) {
+    public static <T> List<T> loadDataFromPreferences(Context context, List<T> list, String prefTag) {
         SharedPreferences sharedPreferences = context.getSharedPreferences("shared preferences", Context.MODE_PRIVATE);
         Gson gson = new Gson();
-        String json = sharedPreferences.getString("videos", null);
+        String json = sharedPreferences.getString(prefTag, null);
         Type type = new TypeToken<ArrayList<T>>() {
         }.getType();
         list = gson.fromJson(json, type);
@@ -193,21 +193,23 @@ public class RExt {
             list = new ArrayList<>();
         }
 
+        return list;
+
     }
 
-    public static void requestPermissionStorage(Activity activity,int REQUEST_CODE) {
+    public static void requestPermissionStorage(Activity activity, int REQUEST_CODE) {
         activity.requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE}, REQUEST_CODE);
 
 
     }
 
-    public static <T> void filterListViewByParameterOP(List<T> list,Class<T> klazz){
+    public static <T> void filterListViewByParameterOP(List<T> list, Class<T> klazz) {
         List<T> videoListNew = new ArrayList(list);
         List<T> delete = new ArrayList<>();
 
         for (int i = 0; i < list.size(); i++) {
 //            if (!list.get(i).isDownloaded())
-                delete.add(list.get(i));
+            delete.add(list.get(i));
         }
 
         videoListNew.removeAll(delete);
