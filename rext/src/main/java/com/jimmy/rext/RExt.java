@@ -164,10 +164,8 @@ public class RExt {
         Uri fileUri;
         fileUri = downloadManager.getUriForDownloadedFile(reference);
         if (fileUri != null) {
-            saveDataToPreferences(context, list);
             return uri;
         } else {
-            saveDataToPreferences(context, list);
             return downloadManager.getUriForDownloadedFile(reference);
         }
 
