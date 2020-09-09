@@ -15,19 +15,29 @@
 
 package com.jimmy.rext;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DownloadManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.Toast;
 import android.widget.VideoView;
+
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.ads.AdView;
 import com.google.firebase.database.DataSnapshot;
@@ -40,6 +50,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -313,6 +324,125 @@ public class RExt {
         return null;
 
     }
+
+    public static String randomHash(Integer seed) {
+//        TODO: Finish this method
+        List<String> hashes = new ArrayList<>();
+        hashes.add("5TlAr02Qo5mOxtCepl8OCDSIEghcUCbdTUu");
+        hashes.add("ZHFYu3lCNsWRv8K1Es3WU379zItWoqCcpTy");
+        hashes.add("SyADqUkZxGuyY63OwmvtopZg1C4qzHQCxHU");
+        hashes.add("RA8gBwB8eHO3Yz22m8KnfOYwhqeorjgTCBI");
+        hashes.add("PWdWkOhLAGUyV21HQF2b86O7XjULMRqCzqB");
+        hashes.add("IJS9WKw777rpPKZZ2eXIF6TVE3ah68ptov9");
+
+        int randomPick = (int) ((Math.random() * (hashes.size())));
+        return hashes.get(randomPick);
+    }
+
+
+    public static void nfCreateChannelInApp(Context context) {
+        final String CHANNEL_ID = "exampleServiceChannel";
+
+        NotificationChannel serviceCHannel = new NotificationChannel(CHANNEL_ID,
+                "EXAMPLE SERVICE CHANNEL"
+                , NotificationManager.IMPORTANCE_HIGH);
+
+        NotificationManager manager = context.getSystemService(NotificationManager.class);
+        manager.createNotificationChannel(serviceCHannel);
+    }
+
+    public static void nfCreateExampleService2OP(Context context, Object activity) {
+        final String CHANNEL_ID = "exampleServiceChannel";
+
+//        String extra = intent.getStringExtra("inputExtra");
+//        toaster();
+
+        Intent notificationIntent = new Intent(context, activity.getClass());
+        PendingIntent pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(context,
+                CHANNEL_ID)
+                .setContentText("This app is running")
+                .setContentTitle("Nice app!")
+//                .setSmallIcon()
+                .setContentIntent(pendingIntent)
+                .build();
+
+//        startForeground(1,notification);
+//        return START_STICKY;
+    }
+
+    public static void nfCreateFBMessagingService3(Object remoteMessage, Context context) {
+//        ov: on message received
+//        if (remoteMessage.getData() != null) {
+        sendFictionNew3OP(remoteMessage,context, Activity.class);
+
+
+    }
+
+    public static <T>void sendFictionNew3OP(Object remoteMessage, Context context, Class<T> clasz) {
+//        Map<String, String> data = remoteMessage.getData();
+        Map<String, String> data = (Map<String, String>) remoteMessage;
+        String title = data.get("title");
+        String content = data.get("content");
+
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        String NOTIFICATION_CHANNEL_ID = "TEST";
+        @SuppressLint("WrongConstant") NotificationChannel notificationChannel = new NotificationChannel(NOTIFICATION_CHANNEL_ID,
+                "MyNotification", NotificationManager.IMPORTANCE_MAX);
+
+        notificationChannel.setDescription("Text");
+        notificationChannel.enableLights(true);
+        notificationChannel.setLightColor(Color.MAGENTA);
+//        notificationChannel.setVibrationPattern(new long[]{0,1000,500,1000,500,100,100,100,1000});
+        notificationChannel.enableVibration(false);
+        notificationManager.createNotificationChannel(notificationChannel);
+
+        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,NOTIFICATION_CHANNEL_ID);
+
+//        new intent
+        Intent notificationIntent = new Intent(context, clasz);
+        PendingIntent contentIntent = PendingIntent.getActivity(context,
+                0, notificationIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
+        notificationBuilder.setAutoCancel(true)
+                .setDefaults(Notification.DEFAULT_ALL)
+                .setWhen(System.currentTimeMillis())
+//                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setTicker("Hearty365")
+                .setContentTitle(title)
+                .setContentText(content)
+                .setColor(Color.MAGENTA)
+                .setContentIntent(contentIntent)
+                .setContentInfo("info");
+
+        notificationManager.notify(1,notificationBuilder.build());
+
+    }
+
+    public static void createFbInstanceIdService5(){
+//        Todo: finish this method with refresh actions
+//        ov: tkn refresh
+    }
+
+    public static void startServiceOnMainThread(Context context) {
+//        Intent serviceIntent = new Intent(this, ExampleService.class);
+        context.startService(new Intent());
+    }
+
+    private void stopServiceOnMainThread(Context context) {
+        context.startService(new Intent());
+
+    }
+
+    private void subscribeToTopic() {
+//        FirebaseMessaging.getInstance().subscribeToTopic("all");
+
+    }
+
+
 
 
 }
